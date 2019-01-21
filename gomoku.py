@@ -1,0 +1,2 @@
+gomoku python first commit
+
