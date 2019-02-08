@@ -12,7 +12,7 @@ public class Board{
     public Point computerMove;
 
     public boolean isGameOver(){
-        return hasPlayerWon(Player_X) || hasPlayerWon(Player_O) || getAvailableCells().isEmpty(); 
+        return hasPlayerWon(PLAYER_X) || hasPlayerWon(PLAYER_O) || getAvailableCells().isEmpty(); 
     }
 
     public boolean hasPlayerWon(int player){
@@ -70,7 +70,7 @@ public class Board{
                     value = "O";
                 }
 
-                System.out.println(value + " ");
+                System.out.print(value + " ");
             }
             System.out.println();
         }
@@ -78,8 +78,62 @@ public class Board{
     }
 
     public int minMax(int depth, int turn){
-        
-     
+        if(hasPlayerWon(PLAYER_X)){
+            return 1;
+        }
+        if(hasPlayerWon(PLAYER_O)){
+            return -1;
+        }
+
+        List<Point> availableCells = getAvailableCells();
+
+        if(availableCells.isEmpty()){
+            return 0;
+        }
+
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+
+        for(int i = 0; i< availableCells.size(); i++){
+            Point point = availableCells.get(i);
+
+            if(turn == PLAYER_X){
+                placeAMove(point, PLAYER_X);
+                int currentScore = minMax(depth +1, PLAYER_O);
+                max = Math.max(currentScore, max);
+
+                if(depth == 0){
+                    System.out.println("Computer score for position " + point + " = " + currentScore);
+                }
+                if(currentScore >= 0){
+                    if(depth == 0){
+                        computerMove = point;
+                    }
+                }
+                if(currentScore == 1){
+                    board[point.x][point.y] = NO_PLAYER;
+                    break;
+                }
+
+                if(i == availableCells.size() -1 && max<0){
+                    if(depth == 0){
+                        computerMove = point;
+                    }
+                }
+            }
+
+            else if(turn == PLAYER_O){
+                placeAMove(point, PLAYER_O);
+                int currentScore = minMax(depth +1,PLAYER_X);
+                min = Math.min(currentScore,min);
+                if(min == -1){
+                    board[point.x][point.y] = NO_PLAYER;
+                    break;
+                }
+            }
+            board[point.x][point.y] = NO_PLAYER;
+        }
+        return turn == PLAYER_X ? max : min;
     }
 
 
