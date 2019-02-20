@@ -1,3 +1,3 @@
 # gomoku
-AI implementation on gomoku game
-this is a study project in ESIEE PARIS
+AI implementation on gomoku game. \n
+This is a study project in ESIEE PARIS
